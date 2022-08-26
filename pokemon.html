@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      let pokemonList;
+      let arr = [];
+      let newTag = document.createElement("div");
+      document.body.appendChild(newTag);
+      let content = document.getElementsByTagName("div");
+      let text;
+
+      function pokemonArr(num) {
+        const _BASIC_URL = `https://pokeapi.co/api/v2/pokemon-species/${num}`;
+        const request = new XMLHttpRequest();
+        request.open("GET", _BASIC_URL);
+        request.responseType = "json";
+        request.send();
+        request.addEventListener("load", () => {
+          const _POKEMON_API = request.response;
+          pokemonList = _POKEMON_API.names[2].name; //포켓몬 이름을 담는 변수
+
+          let img = document.createElement("img");
+          img.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${num}.png`;
+          newTag.appendChild(img);
+          let list = document.createElement("li");
+          newTag.appendChild(list);
+          list.innerHTML = pokemonList;
+          console.log(_POKEMON_API);
+          for (let j = 0; j < _POKEMON_API.flavor_text_entries.length; j++) {
+            if (_POKEMON_API.flavor_text_entries[j].language.name === "ko") {
+              let context = document.createElement("p");
+              newTag.appendChild(context);
+              context.innerHTML =
+                _POKEMON_API.flavor_text_entries[j].flavor_text;
+              break;
+            }
+          }
+          // 해결됐다!
+          // 상수 _POKEMON_API 데이터가 사장놈이 가져온 데이터이다
+        });
+      }
+
+      for (let i = 1; i < 20; i++) {
+        pokemonArr(i);
+      }
+
+      newTag.createAttribute("id", "root");
+      list.createAttribute("id", "name-list");
+      const pokemonNameList = document.querySelector("#root #name-list");
+      //식별자 잘해서 스타일링하기!!
+      console.dir(pokemonNameList);
+      pokemonNameList.sytle.color = "blue";
+
+      //망함 !!!!
+    </script>
+  </body>
+</html>
